@@ -9,11 +9,11 @@ import zipfile
 # creates the output bucket,
 # uploads the unzipped file to the new bucket
 
-download_bucket = ...
-upload_bucket = ...
+download_bucket = "temp"
+upload_bucket = "output"
 
 
-FIPS = '11'
+FIPS = '2'
 TMPDIR = Path("/data/tempdata")
 
 if not TMPDIR.exists():
@@ -33,7 +33,7 @@ s3 = boto3.client('s3')
 
 
 FipsFile = FIPS + '.zip'
-Key = '20180107/' + FipsFile
+Key = '20191001/' + FipsFile
 Filename = str(TMPDIR / FipsFile)
 
 # download zip file from s3 to ec2

@@ -4,8 +4,8 @@ from subprocess import Popen
 import boto3
 import zipfile
 
-download_bucket = ...
-upload_bucket = ...
+download_bucket = "temp"
+upload_bucket = "output"
 
 TMPDIR = Path("/data/tempdata")
 FIPS_table = ['2']
@@ -18,7 +18,7 @@ for FIPS in FIPS_table:
 
 
     FipsFile = FIPS + '.zip'
-    Key = '20180107/' + FipsFile
+    Key = '20191001/' + FipsFile
     Filename = str(TMPDIR / FipsFile)
 
     # download zip file from s3 to ec2
@@ -33,20 +33,29 @@ for FIPS in FIPS_table:
 
     p = Popen(["unzip", "-d", str(TMPDIR / FIPS), Filename])
 
+    ##
+    # Program should be placed here
+    ##
 
+    #todo: remove the zip file here
 
     # Create the s3 bucket to upload to.
     # be sure the region is the same as the ec2 instance!
+    """
     s3.create_bucket(
         Bucket=upload_bucket,
         CreateBucketConfiguration={'LocationConstraint': 'us-west-1'}
     )
+    """
 
 
     # iterate through newly unzipped files and
     # upload each to s3.
-
+    """
     basepath = TMPDIR / FIPS
     for fp in basepath.rglob('*.txt'):
         keyname = str(fp.relative_to(basepath))
         s3.upload_file(str(fp), upload_bucket, keyname)
+    """
+
+
