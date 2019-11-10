@@ -1,10 +1,12 @@
 import numpy as np
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
 
 from ZillowUnivariate.univ_stats import SingleTableReader
 
 def program(fips_code, gen_dir = os.getcwd()):
+	file_dir =  fips_code + "/"
 	gen_path = gen_dir
 	dates_table = SingleTableReader("ZTrans", "Main", file_dir).read(
     	usecols =['TransId','DocumentDate','SignatureDate','RecordingDate'])
@@ -39,17 +41,17 @@ def program(fips_code, gen_dir = os.getcwd()):
 	        f.write("100\n")
 	        f.write("100\n")
 	    else:
-	        f.write(str(np.percentile(doc_minus_sig, 10) + '\n'))
-	        f.write(str(np.mean(doc_minus_sig) + '\n'))
-	        f.write(str(np.percentile(doc_minus_sig, 90) + '\n'))
+	        f.write(str(doc_minus_sig.quantile(0.1) + '\n'))
+	        f.write(str(doc_minus_sig.mean() + '\n'))
+	        f.write(str(doc_minus_sig.percentile(0.9) + '\n'))
 	    if len(rec_minus_sig) == 0:
 	        f.write("100\n")
 	        f.write("100\n")
 	        f.write("100\n")
 	    else:
-	        f.write(str(np.percentile(rec_minus_sig, 10) + '\n'))
-	        f.write(str(np.mean(rec_minus_sig) + '\n'))
-	        f.write(str(np.percentile(rec_minus_sig, 90) + '\n'))
+	        f.write(str(rec_minus_sig.quantile(0.1) + '\n'))
+	        f.write(str(rec_minus_sig.mean() + '\n'))
+	        f.write(str(rec_minus_sig.quantile(0.9) + '\n'))
 
 	table = SingleTableReader("ZTrans", "Main", file_dir).read(
 	usecols =['DocumentTypeStndCode','DataClassStndCode','IntraFamilyTransferFlag'])

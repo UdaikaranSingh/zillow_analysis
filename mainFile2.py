@@ -3,7 +3,7 @@ import os
 from subprocess import Popen
 import zipfile
 
-from timeplots import *
+from task11_10_19 import *
 
 
 gen_directory = "/Users/udaisingh/Desktop/gen"
