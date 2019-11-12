@@ -1,61 +1,57 @@
 import os
-from pathlib import Path
+#from pathlib import Path
 from subprocess import Popen
-import boto3
 import zipfile
 
-download_bucket = "temp"
-upload_bucket = "output"
-
-TMPDIR = Path("/data/tempdata")
-FIPS_table = ['2']
+from task11_10_19 import *
 
 
-for FIPS in FIPS_table:
+gen_directory = "/Users/udaisingh/Desktop/gen"
+download = False
 
-    #creating connection to the database
-    s3 = boto3.client('s3')
+FIPS = ["01"]
+
+"""
+FIPS = ["01","02", "04", "05", "06", "08",
+"09", "10", "11", "12", "13", "15", "16", "17",
+"18", "19", "20", "21", "22", "23", "24", "25",
+"26", "27", "28", "29", "30", "31", "32", "33",
+"34", "35", "36", "37", "38", "39", "40", "41",
+"42", "44", "45", "46", "47", "48", "49", "50",
+"51", "53", "54", "55", "56"]
+"""
+
+def process(fip):
+    print("Current FIP processed: " + fip)
+    if (download):
+        download_command = "aws s3 cp s3://zillow-data-raw/20191001/" + fip + ".zip ."
+        #download zip file
+        os.system(download_command)
+        print("Zip File Downloaded")
+        
+        #unzip file
+        fileName = fip + ".zip"
+        unzip_command = "unzip " + fileName + " -d " + fileName.strip(".zip") 
+        os.system(unzip_command)
+        print("File Unzipped")
+        
+        folder = fileName.strip(".zip") + "/"
+        copy_command = "cp Layout.xlsx " + str(folder)
+        os.system(copy_command)
+        
+        #remove zip file
+        remove_zip_file = "rm -rf " + fileName
+        os.system(remove_zip_file)
+
+    print("Program Begining")
+    gen_dir = os.path.join(gen_directory, fip)
+    program(fip, gen_dir)
+    print("Program Ended")
+
+    if (download):
+        remove_folder_command = "rm -rf " + fip + "/"
+        os.system(remove_folder_command)    
 
 
-    FipsFile = FIPS + '.zip'
-    Key = '20191001/' + FipsFile
-    Filename = str(TMPDIR / FipsFile)
-
-    # download zip file from s3 to ec2
-    s3.download_file(
-        Bucket=download_bucket,
-        Key=Key,
-        Filename=Filename
-    )
-
-    # unzip using commandline 
-    # (to unstall unzip -- `sudo apt-get install zip unzip` on command-line)
-
-    p = Popen(["unzip", "-d", str(TMPDIR / FIPS), Filename])
-
-    ##
-    # Program should be placed here
-    ##
-
-    #todo: remove the zip file here
-
-    # Create the s3 bucket to upload to.
-    # be sure the region is the same as the ec2 instance!
-    """
-    s3.create_bucket(
-        Bucket=upload_bucket,
-        CreateBucketConfiguration={'LocationConstraint': 'us-west-1'}
-    )
-    """
-
-
-    # iterate through newly unzipped files and
-    # upload each to s3.
-    """
-    basepath = TMPDIR / FIPS
-    for fp in basepath.rglob('*.txt'):
-        keyname = str(fp.relative_to(basepath))
-        s3.upload_file(str(fp), upload_bucket, keyname)
-    """
-
-
+for fip in FIPS:
+    process(fip)
