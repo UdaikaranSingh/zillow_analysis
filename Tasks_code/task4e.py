@@ -12,7 +12,26 @@ def program(fips_code, gen_dir = os.getcwd()):
 	
 	
 	table = SingleTableReader("ZTrans", "Main", file_dir).read(
-	usecols =['DocumentTypeStndCode','DataClassStndCode','IntraFamilyTransferFlag'])
+	usecols =['DocumentTypeStndCode','SalesPriceAmount'])
+
+	(pd.value_counts(table[pd.isna(table.SalesPriceAmount)]
+		.DocumentTypeStndCode, normalize = True, sort = True)
+	.iloc[0:5]).plot.bar()
+	plt.title("Distribution of Document Types if SalesPriceAmount is Missing")
+	file_path = os.path.join(gen_path, "dist_doc_type_if_salesPrice_missing")
+	plt.savefig(file_path)
+	"""
+	
+	(table
+	      .groupby('DocumentTypeStndCode')
+	      .apply(lambda x: np.mean(pd.isna(x.SalesPriceAmount)))
+	      .to_frame()
+	      .rename(columns = {0:"percentage"})
+	      .sort_values("percentage", ascending=False)
+	      .iloc[0:5]
+	).plot.bar()
+	plt.title("DodcumentType ")
+
 
 	f, (ax1, ax2) = plt.subplots(1,2, sharey=True)
 	plt.subplots_adjust(hspace = 1)
@@ -64,3 +83,5 @@ def program(fips_code, gen_dir = os.getcwd()):
 	file_path = os.path.join(gen_path, "distribution_of_IntraFamily_Tag_Relative_to_DocumentType")
 	plt.savefig(file_path)
 	plt.figure()
+
+	"""
