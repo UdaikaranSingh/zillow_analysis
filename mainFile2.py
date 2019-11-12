@@ -7,9 +7,9 @@ from task11_10_19 import *
 
 
 gen_directory = "/Users/udaisingh/Desktop/gen"
-download = True
+download = False
 
-FIPS = ["02"]
+FIPS = ["01"]
 
 """
 FIPS = ["01","02", "04", "05", "06", "08",
@@ -22,8 +22,8 @@ FIPS = ["01","02", "04", "05", "06", "08",
 """
 
 def process(fip):
+    print("Current FIP processed: " + fip)
     if (download):
-        print("Current FIP processed: " + fip)
         download_command = "aws s3 cp s3://zillow-data-raw/20191001/" + fip + ".zip ."
         #download zip file
         os.system(download_command)
