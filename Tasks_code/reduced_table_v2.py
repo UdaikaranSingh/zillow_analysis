@@ -33,8 +33,8 @@ def program(fips_code, gen_dir = os.getcwd()):
 	    else:
 	        return np.nan
 
-    primary_dates_marker = date_table.apply(get_primary_date_marker, axis = 1)
-    priamry_dates = date_table.apply(get_primary_date, axis = 1)
+	primary_dates_marker = date_table.apply(get_primary_date_marker, axis = 1)
+	priamry_dates = date_table.apply(get_primary_date, axis = 1)
 	main_table['primary_date'] = priamry_dates
 	main_table['primary_date_marker'] = primary_dates_marker
 

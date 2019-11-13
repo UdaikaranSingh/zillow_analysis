@@ -3,11 +3,11 @@ import os
 from subprocess import Popen
 import zipfile
 
-from Tasks_code.task_add_primary_date import *
+from Tasks_code.fixed_reduced_table import *
 
 
 gen_directory = "/Users/udaisingh/Desktop/gen"
-download = True
+download = False
 
 FIPS = ["02"]
 
