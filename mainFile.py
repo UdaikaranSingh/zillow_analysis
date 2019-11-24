@@ -3,11 +3,34 @@ import os
 from subprocess import Popen
 import zipfile
 
-from Tasks_code.fixed_reduced_table import *
+from Tasks_code.task_join import *
 
 
 gen_directory = "/Users/udaisingh/Desktop/gen"
-download = False
+arms_length_file_directory = "/Users/udaisingh/Desktop/Education/Y3Q1/dsc_research/arms_length_transids.dta"
+download = True
+
+###################################################
+# Reads in and organizes arms_length transactions
+###################################################
+print("reading in arms length file")
+reader = pd.read_stata(arms_length_file_directory, iterator = False)
+state_dict = {}
+grouped = reader.groupby('state_fips')
+for i, sdf in grouped:
+    state_dict[i] = sdf
+del reader, grouped
+print("finished reading in arms length file")
+
+
+
+###################################################
+# parameters you can change to change what is saved
+###################################################
+table = "Main"
+columns = ["SalesPriceAmountStndCode", "FIPS"]
+generated_file_name = "place_name_here"
+
 
 FIPS = ["02"]
 
@@ -45,7 +68,7 @@ def process(fip):
 
     print("Program Beginning")
     gen_dir = os.path.join(gen_directory, fip)
-    program(fip, gen_dir)
+    program(fip, gen_dir, state_dict, table, columns, generated_file_name)
     print("Program Ended")
 
     if (download):
